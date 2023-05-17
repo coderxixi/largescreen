@@ -1,7 +1,7 @@
 
 
 <template>
-    <rorter-view/>
+    <router-view/>
 </template>
 <script setup>
 
