@@ -4,56 +4,7 @@
     <router-view/>
 </template>
 <script setup>
-import { onMounted, onUnmounted } from "vue";
-import _ from "lodash";
-
- function useScalePage() {
-  let resizeChange = _.throttle( () =>{
-    triggerScale();
-  }, 100);
-  function triggerScale(option = {}) {
-    let targetX = option.targetX || 1920;
-    let targetY = option.targetY || 1080;
-    let targetRatio = option.targetRatio || 16 / 9;
-
-    // 1.拿到当前屏幕的宽高
-    let currentX =
-      document.documentElement.clientWidth || document.body.clientWidth;
-    let currentY =
-      document.documentElement.clientHeight || document.body.clientHeight;
-
-    // 2.计算缩放的比例
-    let scaleRatio = currentX / targetX;
-
-    // 当前的屏幕宽高比
-    let currentRatio = currentX / currentY;
-    if (currentRatio > targetRatio) {
-      scaleRatio = currentY / targetY;
-      // 3.设置缩放( 类似图片放大 )
-      document.body.setAttribute(
-        "style",
-        `width:${targetX}px;height:${targetY}px;transform: scale(${scaleRatio})  translateX(-50%); left:50%`
-      );
-    } else {
-      // 3.设置缩放( 类似图片放大 )
-      document.body.setAttribute(
-        "style",
-        `width:${targetX}px;height:${targetY}px;transform: scale(${scaleRatio})`
-      );
-    }
-  }
-  onMounted( ()=> {
-    triggerScale();
-    window.addEventListener("resize", resizeChange);
-  });
-
-  onUnmounted( ()=> {
-    
-    window.removeEventListener("resize", resizeChange);
-  });
-
-
-}
+import useScalePage from "@/hooks/useScalePage.js"
 useScalePage()
 </script>
 <style scoped>
