@@ -3,21 +3,29 @@
    <!-- 头部 -->
    <div class="header"></div>
    <!-- 左边 -->
-   <div class="left-top"></div>
-    <div class="left-bottom"></div>
+   <div class="left-top">
+
+    <PieCharts/>
+   </div>
+    <div class="left-bottom">
+      <lineEcharts/>
+    </div>
     <!-- 右边 -->
     <div class="right-top"></div>
       <div class="right-center"></div>
       <div class="right-bottom"></div>
 <!-- 中间 -->
        
-        <div class="center"></div>
+        <div class="center">
+          
+        </div>
         <div class="bottom"></div>
   </main>
 </template>
 
 <script setup>
-
+import PieCharts from "@/components/pie-charts.vue";
+import lineEcharts from "@/components/line-echarts.vue"
 </script>
 
 <style lang="scss" scoped>
