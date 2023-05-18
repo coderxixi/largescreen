@@ -19,7 +19,9 @@
         <div class="center">
           
         </div>
-        <div class="bottom"></div>
+        <div class="bottom">
+            <bottomPanel :panelItems="powerData.dataAnalysis.data" />
+        </div>
   </main>
 </template>
 
@@ -27,6 +29,7 @@
 import {ref} from "vue";
 import PieCharts from "@/components/pie-charts.vue";
 import lineEcharts from "@/components/line-echarts.vue";
+import bottomPanel from "@/components/bottom-panel.vue"
 import { getPowerScreenData } from "../services";
 import defaultHomeData from "./config/default-home-data.json";
 let powerData = ref(defaultHomeData);
