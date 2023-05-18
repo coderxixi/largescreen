@@ -1,67 +1,49 @@
 <template>
-  <div ref="divRef" class="home" :style="{'width':width,'height':height}">
-
-  </div>
+  <div ref="divRef" :style="{ width: width, height: height }"></div>
 </template>
 
 <script setup>
-import * as echarts  from "echarts";
-import {ref,onMounted} from "vue";
-
-const props=defineProps({
-  width:{
-    type:String,
-    default:'100%'
+import { ref, onMounted, watch } from "vue";
+import useEchart from "@/hooks/useEchart";
+const props = defineProps({
+  width: {
+    type: String,
+    default: "100%",
   },
-  height:{
-     type: String,
-    default: '100%'
-  }
-})
-let divRef=ref(null);
-onMounted(()=>{
-  let myChart= echarts.init(divRef.value,null,{
-    render:'svg'
-  })
+  height: {
+    type: String,
+    default: "100%",
+  },
+  echartDatas: {
+    type: Object,
+    default: function () {
+      return [];
+    },
+  },
+});
+let divRef = ref(null);
+let hyEchart = null;
 
-  let pieDatas = [
-    {
-      value: 100,
-      name: "广州占比",
-      percentage: "5%",
-      color: "#34D160",
-    },
-    {
-      value: 200,
-      name: "深圳占比",
-      percentage: "4%",
-      color: "#027FF2",
-    },
-    {
-      value: 300,
-      name: "东莞占比",
-      percentage: "8%",
-      color: "#8A00E1",
-    },
-    {
-      value: 400,
-      name: "佛山占比",
-      percentage: "10%",
-      color: "#F19610",
-    },
-    {
-      value: 500,
-      name: "中山占比",
-      percentage: "20%",
-      color: "#6054FF",
-    },
-    {
-      value: 600,
-      name: "珠海占比",
-      percentage: "40%",
-      color: "#00C6FF",
-    },
-  ];
+watch(
+  () => props.echartDatas,
+  (newV, oldV) => {
+    setupEchart(newV); // 显示网络请求的数据
+  }
+);
+onMounted(() => {
+  setupEchart(props.echartDatas); // 显示默认的数据
+});
+
+function setupEchart(echartDatas) {
+  if (!hyEchart) {
+    hyEchart = useEchart(divRef.value);
+  }
+  let option = getOption(echartDatas);
+  hyEchart.setOption(option);
+}
+
+function getOption(pieDatas = []) {
+  // let pieDatas = props.echartDatas;
 
   let colors = pieDatas.map((item) => {
     return item.color;
@@ -79,6 +61,7 @@ onMounted(()=>{
   }, 0);
 
   let option = {
+    // backgroundColor: 'rbg(40,46,72)',
     color: colors,
     title: {
       text: `{nameSty| 充电桩总数}\n{number|${total}}`,
@@ -153,13 +136,6 @@ onMounted(()=>{
       },
     ],
   };
-  
-
-  myChart.setOption(option)
-
-})
+  return option;
+}
 </script>
-
-<style lang="scss" scoped>
-
-</style>

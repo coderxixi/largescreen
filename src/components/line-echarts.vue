@@ -1,31 +1,49 @@
 <template>
-  <div ref="divRef" class="home" :style="{ 'width': width, 'height': height }">
-
-  </div>
+  <div ref="divRef" :style="{ width: width, height: height }"></div>
 </template>
 
 <script setup>
-import * as echarts from "echarts";
-import { ref, onMounted } from "vue";
-
+import { ref, onMounted, watch } from "vue";
+import useEchart from "@/hooks/useEchart";
 const props = defineProps({
   width: {
     type: String,
-    default: '100%'
+    default: "100%",
   },
   height: {
     type: String,
-    default: '100%'
-  }
-})
+    default: "100%",
+  },
+  echartDatas: {
+    type: Array,
+    default: function () {
+      return [];
+    },
+  },
+});
 let divRef = ref(null);
-onMounted(() => {
-  let myChart = echarts.init(divRef.value, null, {
-    render: 'svg'
-  })
+let hyEchart = null;
 
+watch(
+  () => props.echartDatas,
+  (newV, oldV) => {
+    setupEchart(newV);
+  }
+);
+onMounted(() => {
+  setupEchart(props.echartDatas);
+});
+
+function setupEchart(echartDatas) {
+  if (!hyEchart) {
+    hyEchart = useEchart(divRef.value);
+  }
+  let option = getOption(echartDatas);
+  hyEchart.setOption(option);
+}
+
+function getOption(echartDatas = []) {
   let option = {
-    // backgroundColor: 'rbg(40,46,72)',
     grid: {
       left: "5%",
       right: "1%",
@@ -101,7 +119,7 @@ onMounted(() => {
     ],
     series: [
       {
-        name: "正常",
+        name: echartDatas[0].name,
         type: "line",
         smooth: true,
         stack: "总量",
@@ -133,10 +151,10 @@ onMounted(() => {
             ],
           },
         },
-        data: [220, 182, 191, 234, 290, 330, 310, 201, 154, 190, 330, 410],
+        data: echartDatas[0].data,
       },
       {
-        name: "异常",
+        name: echartDatas[1].name,
         type: "line",
         smooth: true,
         stack: "总量",
@@ -168,16 +186,10 @@ onMounted(() => {
             ],
           },
         },
-        data: [20, 12, 11, 24, 90, 330, 10, 1, 154, 90, 330, 10],
+        data: echartDatas[1].data,
       },
     ],
   };
-
-
-
-  myChart.setOption(option)
-
-})
+  return option;
+}
 </script>
-
-<style lang="scss" scoped></style>

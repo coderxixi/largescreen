@@ -5,10 +5,10 @@
    <!-- 左边 -->
    <div class="left-top">
 
-    <PieCharts/>
+    <PieCharts  :echartDatas="powerData.chargingPile.data"/>
    </div>
     <div class="left-bottom">
-      <lineEcharts/>
+      <lineEcharts :echartDatas="powerData.processMonitoring.data "/>
     </div>
     <!-- 右边 -->
     <div class="right-top"></div>
@@ -24,8 +24,16 @@
 </template>
 
 <script setup>
+import {ref} from "vue";
 import PieCharts from "@/components/pie-charts.vue";
-import lineEcharts from "@/components/line-echarts.vue"
+import lineEcharts from "@/components/line-echarts.vue";
+import { getPowerScreenData } from "../services";
+import defaultHomeData from "./config/default-home-data.json";
+let powerData = ref(defaultHomeData);
+// 发起网络请求
+getPowerScreenData().then((res) => {
+  powerData.value = res.data;
+});
 </script>
 
 <style lang="scss" scoped>
